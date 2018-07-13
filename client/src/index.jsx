@@ -10,15 +10,28 @@ class App extends React.Component {
     this.state = { 
       repos: []
     }
-
+    this.search = this.search.bind(this);
+  }
+  
+  componentDidMount() {
+    console.log("component did mount");
+    $.get("/repos", function(repoarr) {}).done(repoarr => { this.setState({ repos: repoarr }); });      
   }
 
-  search (term) {
+  search(term) {
     console.log(`${term} was searched`);
-    // TODO
+    $.ajax({
+      method: "POST",
+      url: "/repos",
+      data: {
+        data: term
+      }
+    }).done(function(res) {
+      console.log("saved " + res);
+    });
   }
 
-  render () {
+  render() {
     return (<div>
       <h1>Github Fetcher</h1>
       <RepoList repos={this.state.repos}/>
